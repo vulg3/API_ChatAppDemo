@@ -1,7 +1,7 @@
-import { Users } from "../user.entity";
+import { User } from "../user.entity";
 
 export class UserGetByIDResponseDTO {
     status: boolean;
     message: string;
-    data: Users;
+    data: User;
 }

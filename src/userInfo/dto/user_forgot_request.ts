@@ -1,4 +1,4 @@
-export class UserForGotRequestDTO{
+export class UserInfoForGotRequestDTO{
     email: string;
     newPassword: string
 }

@@ -1,30 +1,16 @@
-
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { Document, ObjectId, SchemaTypes, Types } from "mongoose";
+import mongoose, { Document, Types } from "mongoose";
 export type UserDocument = Users & Document;
 
-
-export class Message{
+export class chat{
     @Prop()
-    Text : string;
-
-    @Prop()
-    Time: string;
-
-    @Prop()
-    type: string;
-
+    text:string;
 }
-
 @Schema()
 export class Users {
-
     @Prop({ type: mongoose.Schema.Types.ObjectId })
     _idUser: Types.ObjectId;
-
-    @Prop()
-    name: string;
-
+    
     @Prop()
     email: string;
 
@@ -32,26 +18,19 @@ export class Users {
     password: string;
 
     @Prop()
-    phone: string;
+    name: string;
 
     @Prop()
-    active: boolean;
+    phonenumber: string;
+
+    @Prop()
+    listChat: chat[] | null;
+
+    @Prop()
+    birthDate: string;
 
     @Prop()
     avatar: string;
-
-    @Prop()
-    isOnline: number;
-    
-    @Prop()
-    gender: string;
-
-    @Prop()
-    birthDay: string;
-
-    @Prop()
-    chat: Message[] | null;
-
 }
 
 export const UserSchema = SchemaFactory.createForClass(Users);

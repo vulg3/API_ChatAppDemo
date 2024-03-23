@@ -1,18 +1,14 @@
 import { Types } from "mongoose";
-import { Message } from "./user.schema";
+import { chat } from "./user.schema";
 
-export class Users {
+export class User {
     _id: Types.ObjectId;
     _idUser: Types.ObjectId;
-    name: string;
     email: string;
+    name: string;
     password: string;
-    phone: string;
-    active: boolean;
+    phonenumber: string;
+    listChat: chat[];
+    birthDate: string;
     avatar: string;
-    gender: string;
-    birthDay: string;
-    isOnline: number;
-    chat: Message[];
-
 }

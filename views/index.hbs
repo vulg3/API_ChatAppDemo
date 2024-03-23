@@ -13,38 +13,32 @@
 
     <div>
         <input id="message" type="text" />
-        <button onclick="handleSubmitNewMessage()">Submit</button>
+        <button onclick="sendMessage()" type="button">Submit</button>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js">
+        const socket = io("http://localhost:3000");
+
+
+        function sendMessage() {
+            const messageInput = document.getElementById("message");
+            const message = messageInput.value;
+            if (message.trim() !== "") {
+                // Send the message to the server
+                socket.emit("createMessage", { clientID: idClient, text: message });
+                // Display the message on the client
+                messageInput.value = "";
+            }
+        }
+
+        const buildNewMessage = (message) => {
+            const li = document.createElement("li");
+            li.appendChild(document.createTextNode(message))
+            return li;
+        }
+
+    </script>
+
 </body>
-
-<script>
-    const socket = io("http://localhost:3000");
-    const message = document.getElementById('message');
-    const messages = document.getElementById('messages');
-
-    const handleSubmitNewMessage = () => {
-        socket.emit('message', {data : message.value})
-    }
-
-    socket.on('message', ({data}) => {
-        handleNewMessage(data);
-
-    })
-
-    const handleNewMessage = (message) => {
-        message.appendChild(buildNewMessage(message));
-    }
-
-    const buildNewMessage = (message) => {
-        const li = document.createElement("li");
-        li.appendChild(document.createTextNode(message))
-        return li;
-    }
-
-
-
-</script>
 
 </html>
