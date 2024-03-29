@@ -7,6 +7,9 @@ import { UserGetAllResponseDTO } from './dto/getall-user.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+
+  //Url: http://localhost:3000/user/GetAllUsers
+
   @Get('GetAllUsers')
   async getAllUsers(@Res() res:Response){
     try {

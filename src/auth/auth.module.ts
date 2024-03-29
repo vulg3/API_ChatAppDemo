@@ -2,13 +2,15 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserInfoModule } from 'src/userInfo/user.module';
-
+import { PassportModule } from "@nestjs/passport";
+import { SessionSerializer } from './session';
 @Module({
   imports:[
-    UserInfoModule
+    UserInfoModule,
+    PassportModule
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, SessionSerializer],
   exports: [AuthService],
 
 })
