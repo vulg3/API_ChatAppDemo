@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserInfoModule } from './userInfo/user.module';
+import { UserInfoModule } from './userInfo/userinfo.module';
 import { MessagerService } from './messager/messager.service';
 import { MessagerGateway } from './messager/messager.gateway';
 import { MessagerModule } from './messager/messager.module';

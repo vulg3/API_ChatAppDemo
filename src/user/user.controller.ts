@@ -19,6 +19,7 @@ export class UserController {
       return res.status(HttpStatus.BAD_REQUEST).json(error);
     }
   }
+  //Url: http://localhost:3000/user/GetUserByID/:id
 
   @Post('GetUserByID/:id')
   async GetUserByID(@Param('id') _id : UserGetAllResponseDTO ,@Body () body:{name: string , email:string} , @Res() res: Response){

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { UserInfoDocument, UsersInfo } from './user.schema';
+import { UserInfoDocument, UsersInfo } from './userinfo.schema';
 import { UserInsertRequestDTO } from './dto/user_register_request';
 import { UserInfoLoginRequestDTO } from './dto/user_login_request';
 import { UserInfoForGotRequestDTO } from './dto/user_forgot_request';
@@ -25,9 +25,7 @@ export class UserInfoService {
     private readonly mailerSerService: MailerService,
   ) { }
 
-  async RegisterUser(
-    requestDTO: UserInsertRequestDTO,
-  ): Promise<UserInfoRegisterResponseDTO | UserInfoResponseDTO> {
+  async RegisterUser(requestDTO: UserInsertRequestDTO): Promise<UserInfoRegisterResponseDTO | UserInfoResponseDTO> {
     try {
       const { username, email, password } = requestDTO;
       const user = await this.userModel.findOne({ email });
@@ -64,9 +62,7 @@ export class UserInfoService {
     }
   }
 
-  async LoginUser(
-    requestDTO: UserInfoLoginRequestDTO,
-  ): Promise<any | UserInfoResponseDTO> {
+  async LoginUser(requestDTO: UserInfoLoginRequestDTO): Promise<any | UserInfoResponseDTO> {
     try {
       const { email } = requestDTO;
       const user = await this.userModel.findOne({ email });
@@ -81,9 +77,7 @@ export class UserInfoService {
     } catch (error: any) { }
   }
 
-  async ForGotPass(
-    requestDTO: UserInfoForGotRequestDTO,
-  ): Promise<UserInfoResponseDTO> {
+  async ForGotPass(requestDTO: UserInfoForGotRequestDTO): Promise<UserInfoResponseDTO> {
     try {
       const { email, newPassword } = requestDTO;
       const user = await this.userModel.findOne({ email });
@@ -139,14 +133,10 @@ export class UserInfoService {
     }
   }
 
-  async VerifyUser(
-    requestDTO: UserInfoSendMailRequestDTO,
-  ): Promise<UserInfoResponseDTO | any> {
+  async VerifyUser(requestDTO: UserInfoSendMailRequestDTO): Promise<UserInfoResponseDTO | any> {
     try {
       const { email } = requestDTO;
-      const random = Math.floor(Math.random() * 1000000)
-        .toString()
-        .padStart(6, '0');
+      const random = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
       const sendMail = this.mailerSerService.sendMail({
         to: email,
         from: `nongnong10122003@gmail.com`,
@@ -189,9 +179,7 @@ export class UserInfoService {
     }
   }
 
-  async UpdateInforUser(
-    requestDTO: UserInsertRequestDTO | any,
-  ): Promise<UserInfoResponseDTO | any> {
+  async UpdateInforUser(requestDTO: UserInsertRequestDTO | any): Promise<UserInfoResponseDTO | any> {
     try {
       const { _id, email = null, username = null } = requestDTO;
       const user = await this.userModel.findOne({ _id: _id });

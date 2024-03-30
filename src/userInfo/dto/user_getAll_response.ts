@@ -1,3 +1,3 @@
-import { UsersInfo } from "../user.entity";
+import { UsersInfo } from "../userinfo.entity";
 
 export class UserGetAllResponseDTO extends UsersInfo{}

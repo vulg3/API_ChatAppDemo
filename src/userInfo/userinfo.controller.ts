@@ -13,7 +13,7 @@ import {
 import { UserInsertRequestDTO } from './dto/user_register_request';
 import { UserInfoLoginRequestDTO } from './dto/user_login_request';
 import { UserInfoForGotRequestDTO } from './dto/user_forgot_request';
-import { UserInfoService } from './user.service';
+import { UserInfoService } from './userinfo.service';
 import { Response } from 'express';
 import { UserInfoSendMailRequestDTO } from './dto/user_sendmail_request';
 

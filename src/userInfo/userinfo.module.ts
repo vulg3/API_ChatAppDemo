@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
-import { UserInfoController } from './user.controller';
-import { UserInfoSchema, UsersInfo } from './user.schema';
-import { UserInfoService } from "./user.service";
+import { UserInfoController } from './userinfo.controller';
+import { UserInfoSchema, UsersInfo } from './userinfo.schema';
+import { UserInfoService } from "./userinfo.service";
 import { MailerModule } from "@nestjs-modules/mailer";
 
 

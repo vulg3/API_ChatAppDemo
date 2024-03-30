@@ -6,7 +6,6 @@ export class User {
     _idUser: Types.ObjectId;
     email: string;
     name: string;
-    password: string;
     phonenumber: string;
     listChat: chat[];
     birthDate: string;

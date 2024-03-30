@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserInfoService } from "src/userInfo/user.service";
+import { UserInfoService } from "src/userInfo/userinfo.service";
 import * as bcrypt from 'bcrypt';
 
 
