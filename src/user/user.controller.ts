@@ -7,20 +7,7 @@ import { UserGetAllResponseDTO } from './dto/getall-user.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-
-  //Url: http://localhost:3000/user/GetAllUsers
-
-  @Get('GetAllUsers')
-  async getAllUsers(@Res() res:Response){
-    try {
-      const responseDTO = await this.userService.GetAllUser();
-      return res.status(HttpStatus.OK).json(responseDTO);
-    } catch (error) {
-      return res.status(HttpStatus.BAD_REQUEST).json(error);
-    }
-  }
   //Url: http://localhost:3000/user/GetUserByID/:id
-
   @Post('GetUserByID/:id')
   async GetUserByID(@Param('id') _id : UserGetAllResponseDTO ,@Body () body:{name: string , email:string} , @Res() res: Response){
     try {

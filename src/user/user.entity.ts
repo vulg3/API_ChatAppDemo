@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { chat } from "./user.schema";
+import { Message } from "src/messager/message.schema";
 
 export class User {
     _id: Types.ObjectId;
@@ -7,7 +7,8 @@ export class User {
     email: string;
     name: string;
     phonenumber: string;
-    listChat: chat[];
+    listChat: Message[];
     birthDate: string;
     avatar: string;
+    active:string;
 }

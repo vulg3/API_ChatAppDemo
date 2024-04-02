@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { UserInfoService } from "src/userInfo/userinfo.service";
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 
 @Injectable()
 export class AuthService {
     constructor(
         private userInfoService: UserInfoService,
+    private readonly jwtService: JwtService,
+
     ) { }
     async signIn(request: any) {
         const { email, password } = request;
@@ -23,5 +27,8 @@ export class AuthService {
             status: true,
         };
     }
+    verifyToken(token: string) {
+        return this.jwtService.verify<JwtPayload>(token);
+      }
 
 }

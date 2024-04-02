@@ -20,14 +20,14 @@ import { UserInfoSendMailRequestDTO } from './dto/user_sendmail_request';
 //Url: http://localhost:3000/users
 @Controller('usersInfo')
 export class UserInfoController {
-  constructor(private readonly userService: UserInfoService) {}
+  constructor(private readonly userInfoService: UserInfoService) {}
 
   //Url: http://localhost:3000/usersInfo/RegisterUser
   @Post('RegisterUser')
   async RegisterUser(@Body() body: UserInsertRequestDTO, @Res() res: any) {
     try {
       body = { ...body };
-      const responseDTO = await this.userService.RegisterUser(body);
+      const responseDTO = await this.userInfoService.RegisterUser(body);
       return res.status(HttpStatus.OK).json(responseDTO);
     } catch (error: any) {
       return res.status(HttpStatus.BAD_REQUEST).json(error);
@@ -38,7 +38,7 @@ export class UserInfoController {
   @Post('LoginUser')
   async LoginUser(@Body() body: UserInfoLoginRequestDTO, @Res() res: any) {
     try {
-      const responseDTO = await this.userService.LoginUser(body);
+      const responseDTO = await this.userInfoService.LoginUser(body);
       return res.status(HttpStatus.OK).json(responseDTO);
     } catch (error: any) {
       return res.status(HttpStatus.BAD_REQUEST).json(error);
@@ -49,7 +49,7 @@ export class UserInfoController {
   @Post('ForgotPassword')
   async ForGotPass(@Body() body: UserInfoForGotRequestDTO, @Res() res: any) {
     try {
-      const responseDTO = await this.userService.ForGotPass(body);
+      const responseDTO = await this.userInfoService.ForGotPass(body);
       return res.status(HttpStatus.OK).json(responseDTO);
     } catch (error: any) {
       return res.status(HttpStatus.BAD_REQUEST).json(error);
@@ -59,7 +59,7 @@ export class UserInfoController {
   @Post('ChangePassword')
   async ChangePassword(@Body() body: any, @Res() res: any) {
     try {
-      const responseDTO = await this.userService.ChangePassword(body);
+      const responseDTO = await this.userInfoService.ChangePassword(body);
       return res.status(HttpStatus.OK).json(responseDTO);
     } catch (error: any) {
       return res.status(HttpStatus.BAD_REQUEST).json(error);
@@ -69,7 +69,7 @@ export class UserInfoController {
   @Post('VerifyEmail')
   async SendMail(@Body() body: UserInfoSendMailRequestDTO, @Res() res: any) {
     try {
-      const ResponseDTO = await this.userService.VerifyUser(body);
+      const ResponseDTO = await this.userInfoService.VerifyUser(body);
       return res.status(HttpStatus.OK).json(ResponseDTO);
     } catch (error) {
       return res.status(HttpStatus.BAD_REQUEST).json(error);
@@ -79,7 +79,7 @@ export class UserInfoController {
   @Get('getEmailAllUsersInfor')
   async GetEmailAllUsersInfor(@Res() res: Response) {
     try {
-      const responseDTO = await this.userService.GetEmailAllUsersInfor();
+      const responseDTO = await this.userInfoService.GetEmailAllUsersInfor();
       return res.status(HttpStatus.OK).json(responseDTO);
     } catch (error) {
       return res.status(HttpStatus.BAD_REQUEST).json(error);

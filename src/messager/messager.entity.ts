@@ -1,4 +1,10 @@
+import { Room } from "src/room/room.entity";
+import { User } from "src/user/user.entity";
+
 export class Message {
-    name: string;
-    text: string;
+    messid: string;
+    content: string;
+    room: Room[];
+    owner: User;
+    time: Date;
 }

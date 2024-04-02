@@ -30,7 +30,7 @@ export class UserService {
           access_token: await this.jwtService.signAsync(payload),
         }
       }
-      let newUser = new this.userModel({ _isUser: _id, name, email, phonenumber: null, avatar: null, listChat: [], birthDate: null });
+      let newUser = new this.userModel({ _idUser: _id, name, email, phonenumber: null, avatar: null, listChat: [], birthDate: null });
       await newUser.save();
       return {
         status: true,
@@ -76,13 +76,5 @@ export class UserService {
 
   }
 
-  async GetAllUser(): Promise<UserGetAllResponseDTO[]> {
-    try {
-      const requestDTO = await this.userModel.find();
-      return requestDTO;
-    } catch (error) {
-      return error;
-    }
-  }
 
 }
