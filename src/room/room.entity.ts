@@ -1,10 +1,11 @@
+import { Types } from "mongoose";
 import { Message } from "src/messager/messager.entity";
 import { User } from "src/user/user.entity";
 
 export class Room {
-    roomID: string;
+    roomID: Types.ObjectId;
     title: string;
     messages: Message[];
-    owner:User;
+    owner:string;
     members:User[];
 }

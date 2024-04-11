@@ -22,7 +22,7 @@ export class Users {
     listChat: Message[] | null;
 
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Room' }] })
-    rooms: Room[];
+    room: Room[];
 
     @Prop()
     birthDate: string;
@@ -31,7 +31,7 @@ export class Users {
     avatar: string;
     
     @Prop()
-    active: string;
+    active: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(Users);

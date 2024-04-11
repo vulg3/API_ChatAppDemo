@@ -53,7 +53,7 @@ export class UserService {
 
   async UpdateUser(responseDTO: UpdateUserDto): Promise<UserResponseDTO> {
     try {
-      const { _id, name = null, phonenumber = null, avatar = null, birthDate = null, listChat = [] } = responseDTO;
+      const { _id, name = null, phonenumber = null, avatar = null, birthDate = null, listChat = [] , room  , active} = responseDTO;
       const user = await this.userModel.findOne({ _idUser: _id });
       if (user) {
         user.name = name ? name : user.name;
@@ -61,6 +61,9 @@ export class UserService {
         user.avatar = avatar ? avatar : user.avatar;
         user.birthDate = birthDate ? birthDate : user.birthDate;
         user.listChat = listChat;
+        user.room = room ;
+        user.active = active;
+
         await user.save();
         return {
           status: true,

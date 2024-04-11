@@ -1,5 +1,6 @@
 import { Types } from "mongoose";
-import { Message } from "src/messager/message.schema";
+import { Message } from "src/messager/messager.entity";
+import { Room } from "src/room/room.entity";
 
 export class User {
     _id: Types.ObjectId;
@@ -10,5 +11,6 @@ export class User {
     listChat: Message[];
     birthDate: string;
     avatar: string;
-    active:string;
+    active:boolean;
+    room:Room[];
 }

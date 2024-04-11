@@ -1,10 +1,9 @@
-import { Room } from "src/room/room.entity";
-import { User } from "src/user/user.entity";
+import { Room } from "src/room/room.schema";
 
 export class Message {
-    messid: string;
+    messID: string;
     content: string;
-    room: Room[];
-    owner: User;
+    name: string;
     time: Date;
+    isSeen: boolean;
 }

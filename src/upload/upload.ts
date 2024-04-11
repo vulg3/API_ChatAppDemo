@@ -16,14 +16,12 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
 const uploadImage = async (files: any, cate: any) => {
-    // Upload file and metadata to the object 'images/mountains.jpg'
     const storageRef = ref(storage, `${cate}/` + files.originalname);
     const uploadTask = await uploadBytesResumable(storageRef, files.buffer);
     let url = getDownloadURL(uploadTask.ref).then((downloadURL) => {
         return downloadURL;
     });
     return url;
-    // Listen for state changes, errors, and completion of the upload.
 };
 const uploadVideo = async (videoData: any, category: string) => {
     const storageRef = ref(storage, `${category}/` + videoData.originalname);

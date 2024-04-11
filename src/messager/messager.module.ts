@@ -12,7 +12,7 @@ import { MessageSchema } from './message.schema';
         ]),
     ],
     controllers: [MessageController],
-    providers: [MessagerService],
-    exports: [MessagerService],
+    providers: [  MessagerService ],
+    exports: [MessagerService ],
 })
 export class MessagerModule { }

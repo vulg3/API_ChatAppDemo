@@ -1,9 +1,3 @@
-import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import { Room } from "../room.entity";
 
-export class CreateRoomDto {
-  @IsNotEmpty()
-  @MinLength(1)
-  @MaxLength(100)
-  readonly title: string;
-
-}
+export class CreateRoomResponseDTO extends Room{}

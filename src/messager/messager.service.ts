@@ -13,20 +13,25 @@ export class MessagerService {
     private readonly messageModel: Model<MessageDocument>,
   ) { }
 
-  async getMessages(getMessagesDto: GetMessagesDto) {
-    return this.messageModel.find({ room: getMessagesDto.roomID }).exec();
-  }
-
   async createMessage(createMessageDto: CreateMessageDto) {
     const createdMessage = new this.messageModel(createMessageDto);
     return createdMessage.save();
   }
-  async identify(name: string, clientID: string, avatar: string) {
-    const user = this.clientToUser.find((user: any) => user.id == clientID)
+
+
+  
+  async identify(name: string, _idUser: string, avatar: string) {
+    const user = this.clientToUser.find((user: any) => user._idUser == _idUser)
     if (!user) {
-      this.clientToUser.push({ id: clientID, avatar: avatar, name: name });
-      return clientID;
+      this.clientToUser.push({ id: _idUser, avatar: avatar, name: name });
+      return _idUser;
     }
     return user.id;
   }
+
+  getClientName(_idUser: string) {
+    const user = this.clientToUser.find((user: any) => user.id == _idUser)
+    return user.name;
+  }
+
 }
