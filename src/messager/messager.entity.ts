@@ -1,9 +1,9 @@
-import { Room } from "src/room/room.schema";
+import { Types } from "mongoose";
 
 export class Message {
-    messID: string;
+    messID: Types.ObjectId;
     content: string;
-    name: string;
-    time: Date;
+    senderName: string; 
+    sentTime: Date;
     isSeen: boolean;
 }

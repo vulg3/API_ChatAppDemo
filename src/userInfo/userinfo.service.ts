@@ -42,10 +42,11 @@ export class UserInfoService {
           message: 'Name already exists',
         };
       }
+      const hashPassword = await bcrypt.hash(password, Salt.SALT);
       const newUser = new this.userModel({
         username,
         email,
-        password,
+        password: hashPassword,
       });
 
       const { _id } = await newUser.save();

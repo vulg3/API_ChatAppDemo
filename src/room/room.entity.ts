@@ -3,9 +3,9 @@ import { Message } from "src/messager/messager.entity";
 import { User } from "src/user/user.entity";
 
 export class Room {
-    roomID: Types.ObjectId;
+    roomID: string;
     title: string;
     messages: Message[];
-    owner:string;
+    owner:User[];
     members:User[];
 }

@@ -26,7 +26,6 @@ export class UserInfoController {
   @Post('RegisterUser')
   async RegisterUser(@Body() body: UserInsertRequestDTO, @Res() res: any) {
     try {
-      body = { ...body };
       const responseDTO = await this.userInfoService.RegisterUser(body);
       return res.status(HttpStatus.OK).json(responseDTO);
     } catch (error: any) {

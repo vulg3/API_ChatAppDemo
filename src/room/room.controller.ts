@@ -10,12 +10,21 @@ import { Types } from 'mongoose';
 export class RoomController {
     constructor(private readonly roomService: RoomService) { }
 
-
     //http://localhost:3000/room/getAllRoomsByIDUser/:_idUser
     @Get('getAllRoomsByIDUser/:_idUser')
     async getAllRoomsByIDUser(@Param('_idUser') _idUser: string, @Res() res: Response) {
         try {
             const responseDTO = await this.roomService.getAllRoomsByIDUser(_idUser);
+            return res.status(HttpStatus.OK).json(responseDTO);
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json(error);
+        }
+    }
+
+    @Get('getMessByRoomID/:roomID')
+    async getMessByRoomID(@Param('roomID') roomID : string,  @Res() res : Response){
+        try {
+            const responseDTO = await this.roomService.getMessByRoomID(roomID);
             return res.status(HttpStatus.OK).json(responseDTO);
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json(error);
@@ -40,6 +49,18 @@ export class RoomController {
             return res.status(HttpStatus.OK).json(result);
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json(error);
+        }
+    }
+
+    @Post('createRoomPrivate/:_idUser1/:_idUser2')
+    async createRoomPrivate(@Body() createRoomDto: CreateRoomResponseDTO, @Param('_idUser1') _idUser1: string, @Param('_idUser2') _idUser2: string, @Res() res: Response) {
+        try {
+            const { title, messages } = createRoomDto;
+            const createdRoom = await this.roomService.createRoomPrivate(createRoomDto, _idUser1, _idUser2);
+            return res.status(HttpStatus.OK).json(createdRoom);
+
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: error.message });
         }
     }
 

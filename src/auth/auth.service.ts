@@ -10,6 +10,7 @@ export class AuthService {
     constructor(
         private userInfoService: UserInfoService,
     private readonly jwtService: JwtService,
+    
 
     ) { }
     async signIn(request: any) {

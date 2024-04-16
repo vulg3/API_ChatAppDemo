@@ -6,8 +6,8 @@ export type RoomDocument = Room & Document;
 
 @Schema()
 export class Room extends Document {
-  @Prop({ type: mongoose.Schema.Types.ObjectId })
-  roomID: Types.ObjectId;
+  @Prop()
+  roomID: string;
 
   @Prop()
   title: string;
@@ -15,8 +15,8 @@ export class Room extends Document {
   @Prop({ type: [{ type: { type: mongoose.Schema.Types.ObjectId, ref: 'Message' } }] })
   messages: Message[];
 
-  @Prop()
-  owner: string;
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
+  owner: User[];
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
   members: User[];

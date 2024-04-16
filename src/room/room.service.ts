@@ -4,7 +4,9 @@ import { Model } from 'mongoose';
 import { CreateRoomResponseDTO } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { Room, RoomDocument } from './room.schema';
-import { RoomRequestDTO } from './dto/getall-room.dto';
+import { RoomResponseDTO } from './dto/getall-room.dto';
+import { v4 as uuidv4 } from 'uuid';
+
 @Injectable()
 export class RoomService {
     constructor(
@@ -12,15 +14,12 @@ export class RoomService {
         private readonly roomModel: Model<RoomDocument>,
     ) { }
 
-    async getAllRoomsByIDUser(_idUser: string): Promise<RoomRequestDTO[]> {
+    async getAllRoomsByIDUser(_idUser: string): Promise<RoomResponseDTO[]> {
         try {
             const listRooms: RoomDocument[] = await this.roomModel.find({
-                $or: [
-                    { owner: _idUser },
-                    { members: _idUser }
-                ]
+                members: _idUser
             });
-            const roomDTOs: RoomRequestDTO[] = listRooms.map(room => ({
+            const roomDTOs: RoomResponseDTO[] = listRooms.map(room => ({
                 roomID: room.roomID,
                 title: room.title,
                 owner: room.owner,
@@ -33,13 +32,24 @@ export class RoomService {
         }
     }
 
+    async getMessByRoomID(roomID: string): Promise<RoomResponseDTO[]> {
+        try {
+            return this.roomModel.findOne({ roomID });
+        } catch (error) {
+            return error;
+        }
+    }
+
+
     async createRoom(createRoomDto: CreateRoomResponseDTO, _idUser) {
         try {
             const { title, members, messages } = createRoomDto;
             const membersWithOwner = [...members, _idUser];
             const owner = _idUser;
+            const roomIDv4 = uuidv4();
 
             const createdRoom = new this.roomModel({
+                roomID: roomIDv4,
                 title,
                 owner,
                 members: membersWithOwner,
@@ -55,6 +65,30 @@ export class RoomService {
             };
         }
     }
+
+    async createRoomPrivate(createRoomDto: CreateRoomResponseDTO, _idUser1: string, _idUser2: string) {
+        try {
+            const { title, messages } = createRoomDto;
+            const roomIDv4 = uuidv4();
+    
+            const createdRoom = new this.roomModel({
+                roomID: roomIDv4,
+                title,
+                owner: [_idUser1, _idUser2], 
+                messages
+            });
+    
+            await createdRoom.save();
+            return createdRoom;
+        } catch (error) {
+            return {
+                status: false,
+                message: 'Failed' + error,
+            };
+        }
+    }
+    
+
 
     async updateRoom(roomID: string, updateRoomDto: UpdateRoomDto, _idUser: string) {
         const updatedRoom = await this.roomModel.findByIdAndUpdate(

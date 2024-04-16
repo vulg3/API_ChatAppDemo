@@ -1,25 +1,25 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, Types } from 'mongoose';
 export type MessageDocument = Message & Document;
+
 
 @Schema()
 export class Message extends Document {
-  @Prop()
-  messID: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
+  messID: Types.ObjectId;
 
   @Prop()
   content: string;
 
-  @Prop()
+  @Prop() 
   name: string;
 
-  @Prop()
+  @Prop({ default: Date.now }) 
   time: Date;
 
-  @Prop()
+  @Prop() 
   isSeen: boolean;
+
 }
-
-
 
 export const MessageSchema = SchemaFactory.createForClass(Message);

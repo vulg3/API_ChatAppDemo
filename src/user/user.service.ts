@@ -30,7 +30,7 @@ export class UserService {
           access_token: await this.jwtService.signAsync(payload),
         }
       }
-      let newUser = new this.userModel({ _idUser: _id, name, email, phonenumber: null, avatar: null, listChat: [], birthDate: null });
+      let newUser = new this.userModel({ _idUser: _id, name, email, phonenumber: null, avatar: null, listChat: [], birthDate: null, room: [] });
       await newUser.save();
       return {
         status: true,
@@ -53,7 +53,7 @@ export class UserService {
 
   async UpdateUser(responseDTO: UpdateUserDto): Promise<UserResponseDTO> {
     try {
-      const { _id, name = null, phonenumber = null, avatar = null, birthDate = null, listChat = [] , room  , active} = responseDTO;
+      const { _id, name = null, phonenumber = null, avatar = null, birthDate = null, listChat = [], room = [], active } = responseDTO;
       const user = await this.userModel.findOne({ _idUser: _id });
       if (user) {
         user.name = name ? name : user.name;
@@ -61,7 +61,7 @@ export class UserService {
         user.avatar = avatar ? avatar : user.avatar;
         user.birthDate = birthDate ? birthDate : user.birthDate;
         user.listChat = listChat;
-        user.room = room ;
+        user.room = room;
         user.active = active;
 
         await user.save();
@@ -76,7 +76,15 @@ export class UserService {
         message: 'Error updating user',
       }
     }
+  }
 
+  async GetAllUsers(): Promise<UserGetAllResponseDTO[]> {
+    try {
+      const responseDTO = await this.userModel.find();
+      return responseDTO;
+    } catch (error) {
+      return error;
+    }
   }
 
 

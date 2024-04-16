@@ -4,34 +4,32 @@ import { Model } from 'mongoose';
 import { Message, MessageDocument } from './message.schema';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { GetMessagesDto } from './dto/get-message.dto';
+import * as moment from 'moment';
+
 
 @Injectable()
 export class MessagerService {
-  clientToUser: { id: string, avatar: string, name: string }[] = [];
   constructor(
     @InjectModel(Message.name)
     private readonly messageModel: Model<MessageDocument>,
   ) { }
 
   async createMessage(createMessageDto: CreateMessageDto) {
-    const createdMessage = new this.messageModel(createMessageDto);
-    return createdMessage.save();
+    const message = new this.messageModel({...createMessageDto , time: moment().format('YYY-MM-DD HH:mm:ss'),}); 
+    await message.save(); 
+    return message;
   }
 
-
-  
-  async identify(name: string, _idUser: string, avatar: string) {
-    const user = this.clientToUser.find((user: any) => user._idUser == _idUser)
-    if (!user) {
-      this.clientToUser.push({ id: _idUser, avatar: avatar, name: name });
-      return _idUser;
-    }
-    return user.id;
+  async findMessagesByRoomId(roomID: string): Promise<Message[]> {
+    return this.messageModel.find({ 'room.id': roomID }).exec();
   }
 
-  getClientName(_idUser: string) {
-    const user = this.clientToUser.find((user: any) => user.id == _idUser)
-    return user.name;
+  async readMessage(messID: string) {
+    return this.messageModel.findById(messID).exec();
+  }
+
+  async deleteMessage(messID: string) {
+    return this.messageModel.findByIdAndDelete(messID).exec();
   }
 
 }
