@@ -17,7 +17,7 @@ import { UserInfoService } from './userinfo.service';
 import { Response } from 'express';
 import { UserInfoSendMailRequestDTO } from './dto/user_sendmail_request';
 
-//Url: http://localhost:3000/users
+//Url: http://localhost:3000/usersInfo
 @Controller('usersInfo')
 export class UserInfoController {
   constructor(private readonly userInfoService: UserInfoService) {}
@@ -82,6 +82,16 @@ export class UserInfoController {
       return res.status(HttpStatus.OK).json(responseDTO);
     } catch (error) {
       return res.status(HttpStatus.BAD_REQUEST).json(error);
+    }
+  }
+
+  @Post('updateUserInfo')
+  async updateUser(@Body() body: UserInsertRequestDTO, @Res() res: Response) {
+    try {
+      const user = await this.userInfoService.UpdateInforUser(body);
+      return res.status(HttpStatus.OK).json(user);
+    } catch (error) {
+      return res.status(HttpStatus.BAD_REQUEST).json
     }
   }
 }

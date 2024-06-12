@@ -1,14 +1,17 @@
-import { Controller, Get, HttpCode, HttpStatus, Param, Res, Put, Delete, Body, Post } from '@nestjs/common';
-import { RoomService } from './room.service';
-import { Response, response } from 'express';
+import { Controller, Get, HttpStatus, Param, Res, Put, Delete, Body, Post, Inject } from '@nestjs/common';
+import { Response } from 'express';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { CreateRoomResponseDTO } from './dto/create-room.dto';
-import { Types } from 'mongoose';
+import { IRoomService } from './room';
+import { Services } from 'src/utils/constants';
 
 
 @Controller('room')
 export class RoomController {
-    constructor(private readonly roomService: RoomService) { }
+    constructor(
+        @Inject(Services.ROOMSERVICES)
+        private readonly roomService: IRoomService,
+    ) { }
 
     //http://localhost:3000/room/getAllRoomsByIDUser/:_idUser
     @Get('getAllRoomsByIDUser/:_idUser')
@@ -22,7 +25,7 @@ export class RoomController {
     }
 
     @Get('getMessByRoomID/:roomID')
-    async getMessByRoomID(@Param('roomID') roomID : string,  @Res() res : Response){
+    async getMessByRoomID(@Param('roomID') roomID: string, @Res() res: Response) {
         try {
             const responseDTO = await this.roomService.getMessByRoomID(roomID);
             return res.status(HttpStatus.OK).json(responseDTO);
@@ -42,25 +45,26 @@ export class RoomController {
         }
     }
 
-    @Post('addMemberToRoom/:roomID/:_idUser')
-    async addMemberToRoom(@Param('roomID') roomID: string, @Param('_idUser') _idUser: string, @Res() res: Response) {
-        try {
-            const result = await this.roomService.addMemberToRoom(roomID, _idUser);
-            return res.status(HttpStatus.OK).json(result);
-        } catch (error) {
-            return res.status(HttpStatus.BAD_REQUEST).json(error);
-        }
-    }
-
     @Post('createRoomPrivate/:_idUser1/:_idUser2')
     async createRoomPrivate(@Body() createRoomDto: CreateRoomResponseDTO, @Param('_idUser1') _idUser1: string, @Param('_idUser2') _idUser2: string, @Res() res: Response) {
         try {
-            const { title, messages } = createRoomDto;
+            const { title, messages, imgMess } = createRoomDto;
             const createdRoom = await this.roomService.createRoomPrivate(createRoomDto, _idUser1, _idUser2);
             return res.status(HttpStatus.OK).json(createdRoom);
 
         } catch (error) {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: error.message });
+        }
+    }
+
+    @Post('addMemberToRoom/:roomID')
+    async addMemberToRoom(@Param('roomID') roomID: string, @Body() body: { membersToAdd: { members: string[] } }, @Res() res: Response) {
+        try {
+            const { membersToAdd } = body;
+            const result = await this.roomService.addMemberToRoom(roomID, membersToAdd.members);
+            return res.status(HttpStatus.OK).json(result);
+        } catch (error) {
+            return res.status(HttpStatus.BAD_REQUEST).json(error);
         }
     }
 
@@ -93,7 +97,7 @@ export class RoomController {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: error.message });
         }
     }
-    
+
 }
 
 

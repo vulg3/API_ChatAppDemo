@@ -1,30 +1,35 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateRoomResponseDTO } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { Room, RoomDocument } from './room.schema';
 import { RoomResponseDTO } from './dto/getall-room.dto';
-import { v4 as uuidv4 } from 'uuid';
+import { IRoomService } from './room';
 
 @Injectable()
-export class RoomService {
+export class RoomService implements IRoomService {
     constructor(
         @InjectModel(Room.name)
         private readonly roomModel: Model<RoomDocument>,
     ) { }
 
     async getAllRoomsByIDUser(_idUser: string): Promise<RoomResponseDTO[]> {
+        const page: number = 1;
+        const limit: number = 10;
         try {
             const listRooms: RoomDocument[] = await this.roomModel.find({
                 members: _idUser
-            });
+            })
+                .limit(limit)
+                .skip((page - 1) * limit);
             const roomDTOs: RoomResponseDTO[] = listRooms.map(room => ({
-                roomID: room.roomID,
+                roomID: new Types.ObjectId(room.roomID),
                 title: room.title,
                 owner: room.owner,
                 members: room.members,
                 messages: room.messages,
+                imgMess: room.imgMess
             }));
             return roomDTOs;
         } catch (error) {
@@ -34,7 +39,16 @@ export class RoomService {
 
     async getMessByRoomID(roomID: string): Promise<RoomResponseDTO[]> {
         try {
-            return this.roomModel.findOne({ roomID });
+            const room = await this.roomModel.findOne({ roomID });
+            const roomResponse: RoomResponseDTO[] = room.messages.map(message => ({
+                roomID: new Types.ObjectId(room.roomID),
+                title: room.title,
+                owner: room.owner,
+                members: room.members,
+                messages: [message], 
+                imgMess: room.imgMess
+            }));
+            return roomResponse;
         } catch (error) {
             return error;
         }
@@ -43,17 +57,18 @@ export class RoomService {
 
     async createRoom(createRoomDto: CreateRoomResponseDTO, _idUser) {
         try {
-            const { title, members, messages } = createRoomDto;
+            const { roomID, title, members, messages } = createRoomDto;
             const membersWithOwner = [...members, _idUser];
             const owner = _idUser;
-            const roomIDv4 = uuidv4();
+            const imgMess = 'https://img.freepik.com/free-photo/abstract-surface-textures-white-concrete-stone-wall_74190-8189.jpg';
 
             const createdRoom = new this.roomModel({
-                roomID: roomIDv4,
+                roomID,
                 title,
                 owner,
                 members: membersWithOwner,
-                messages
+                messages,
+                imgMess
             });
 
             await createdRoom.save();
@@ -68,16 +83,16 @@ export class RoomService {
 
     async createRoomPrivate(createRoomDto: CreateRoomResponseDTO, _idUser1: string, _idUser2: string) {
         try {
-            const { title, messages } = createRoomDto;
-            const roomIDv4 = uuidv4();
-    
+            const { roomID, title, messages, imgMess } = createRoomDto;
+
             const createdRoom = new this.roomModel({
-                roomID: roomIDv4,
+                roomID,
                 title,
-                owner: [_idUser1, _idUser2], 
-                messages
+                owner: [_idUser1, _idUser2],
+                messages,
+                imgMess
             });
-    
+
             await createdRoom.save();
             return createdRoom;
         } catch (error) {
@@ -87,8 +102,6 @@ export class RoomService {
             };
         }
     }
-    
-
 
     async updateRoom(roomID: string, updateRoomDto: UpdateRoomDto, _idUser: string) {
         const updatedRoom = await this.roomModel.findByIdAndUpdate(
@@ -113,11 +126,20 @@ export class RoomService {
         return deletedRoom;
     }
 
-    async addMemberToRoom(roomID: string, _idUser: string) {
+    async addMemberToRoom(roomID: string, membersToAdd: string[]) {
         try {
+            const room = await this.roomModel.findById(roomID);
+            
+            if (!room) {
+                return {
+                    status: false,
+                    message: 'Room do not exist',
+                }
+            }
+
             const addMemberToRoom = await this.roomModel.findByIdAndUpdate(
                 roomID,
-                { $addToSet: { members: _idUser } },
+                { $addToSet: { members: { $each: membersToAdd } } },
                 { new: true },
             );
             if (!addMemberToRoom) {
@@ -138,6 +160,22 @@ export class RoomService {
 
     async deleteMemberToRoom(roomID: string, _idUser: string) {
         try {
+            const room = await this.roomModel.findById(roomID);
+
+            if (!room) {
+                return {
+                    status: false,
+                    message: 'Room do not exist',
+                }
+            }
+
+            if (_idUser === room.owner.toString()) {
+                return {
+                    status: false,
+                    message: 'You cannot remove owner to the room',
+                }
+            }
+
             const deleteMemberToRoom = await this.roomModel.findByIdAndUpdate(
                 roomID,
                 { $pull: { members: _idUser } },
@@ -158,4 +196,7 @@ export class RoomService {
             }
         }
     }
+
+
+
 }

@@ -5,10 +5,11 @@ import { Message, MessageDocument } from './message.schema';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { GetMessagesDto } from './dto/get-message.dto';
 import * as moment from 'moment';
+import { IMessagerService } from './messager';
 
 
 @Injectable()
-export class MessagerService {
+export class MessagerService implements IMessagerService {
   constructor(
     @InjectModel(Message.name)
     private readonly messageModel: Model<MessageDocument>,
@@ -20,16 +21,26 @@ export class MessagerService {
     return message;
   }
 
-  async findMessagesByRoomId(roomID: string): Promise<Message[]> {
-    return this.messageModel.find({ 'room.id': roomID }).exec();
-  }
-
   async readMessage(messID: string) {
     return this.messageModel.findById(messID).exec();
   }
 
-  async deleteMessage(messID: string) {
-    return this.messageModel.findByIdAndDelete(messID).exec();
-  }
+  async deleteMessage(messID: string): Promise<any> {
+    try {
+        const result = await this.messageModel.findByIdAndDelete(messID).exec();
+        if (!result) {
+            // Trường hợp không tìm thấy dữ liệu để xóa
+            return 'No message found to delete';
+        }
+        // Trường hợp xóa dữ liệu thành công, không có dữ liệu trả về
+        return 'Message deleted successfully';
+    } catch (error) {
+        // Xử lý lỗi nếu có
+        console.error('Error deleting message:', error);
+        throw error; // Hoặc trả về một thông báo lỗi nếu cần
+    }
+}
+
+
 
 }

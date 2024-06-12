@@ -12,10 +12,10 @@ export class Message extends Document {
   content: string;
 
   @Prop() 
-  name: string;
+  senderName: string;
 
   @Prop({ default: Date.now }) 
-  time: Date;
+  sendTime: Date;
 
   @Prop() 
   isSeen: boolean;

@@ -4,6 +4,6 @@ export class Message {
     messID: Types.ObjectId;
     content: string;
     senderName: string; 
-    sentTime: Date;
+    sendTime: Date;
     isSeen: boolean;
 }

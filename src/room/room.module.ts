@@ -4,6 +4,7 @@ import { RoomController } from './room.controller';
 import { RoomService } from './room.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RoomSchema } from './room.schema';
+import { Services } from 'src/utils/constants';
 
 @Module({
     imports: [
@@ -12,7 +13,19 @@ import { RoomSchema } from './room.schema';
         ]),
     ],
     controllers: [RoomController],
-    providers: [RoomService]
+    providers: [
+        {
+            provide: Services.ROOMSERVICES,
+            useClass: RoomService,
+        },
+    ],
+    exports: [
+        {
+            provide: Services.ROOMSERVICES,
+            useClass: RoomService,
+        },
+    ],
 })
 
 export class RoomModule {}
+

@@ -1,20 +1,35 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus } from '@nestjs/common';
-import { UserService } from './user.service';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus, Inject } from '@nestjs/common';
 import { Response } from 'express';
 import { UserGetAllResponseDTO } from './dto/getall-user.dto';
+import { IUserService } from './user';
+import { Services } from 'src/utils/constants';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(
+    @Inject(Services.USERSERVICE)
+    private readonly userService: IUserService,
+  ) { }
 
-  //Url: http://localhost:3000/user/RegisterUser
-  @Get('getAllUsers')
-  async GetAllUsers(@Res() res: Response) {
+  //Url: http://localhost:3000/user/GetAllUser
+  @Get('GetAllUser')
+  async getAllUser(@Res() res: Response) {
     try {
-      const responseDTO = await this.userService.GetAllUsers();
-      return res.status(HttpStatus.OK).json(responseDTO);
+      const names = await this.userService.GetAllUsers();
+      return res.status(HttpStatus.OK).json(names);
     } catch (error) {
-      return res.status(HttpStatus.BAD_REQUEST).json(error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(error);
+    }
+  }
+
+  //Url: http://localhost:3000/user/GetUserByName/:name
+  @Get('GetUserByName/:name')
+  async getUserByName(@Param('name') name: string, @Res() res: Response) {
+    try {
+      const names = await this.userService.findUserByName(name);
+      return res.status(HttpStatus.OK).json(names);
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(error);
     }
   }
 
@@ -29,6 +44,7 @@ export class UserController {
     }
   }
 
+  //Url: http://localhost:3000/user/updateUser
   @Post('updateUser')
   async updateUser(@Body() body: UserGetAllResponseDTO, @Res() res: Response) {
     try {

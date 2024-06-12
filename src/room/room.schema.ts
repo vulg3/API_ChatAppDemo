@@ -6,11 +6,14 @@ export type RoomDocument = Room & Document;
 
 @Schema()
 export class Room extends Document {
-  @Prop()
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
   roomID: string;
 
   @Prop()
   title: string;
+
+  @Prop()
+  imgMess: string;
 
   @Prop({ type: [{ type: { type: mongoose.Schema.Types.ObjectId, ref: 'Message' } }] })
   messages: Message[];
